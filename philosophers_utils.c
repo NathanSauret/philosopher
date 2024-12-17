@@ -6,52 +6,47 @@
 /*   By: nsauret <nsauret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 15:55:52 by nsauret           #+#    #+#             */
-/*   Updated: 2024/12/16 16:38:16 by nsauret          ###   ########.fr       */
+/*   Updated: 2024/12/17 14:01:14 by nsauret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosopher.h"
 
-void	display_philosopher(t_philosopher *philosopher)
+t_philosopher	*get_philosopher(t_data *data, int number)
 {
-	printf("~~~\n");
-	printf("number: %d\n", philosopher->number);
-	if (philosopher->state == 0)
-		printf("state: eating\n");
-	if (philosopher->state == 1)
-		printf("state: sleeping\n");
-	if (philosopher->state == 2)
-		printf("state: thinking\n");
-	if (philosopher->fork_at_left)
-		printf("fork at left: yes\n");
-	else
-		printf("fork at left: no\n");
-	if (philosopher->fork_at_right)
-		printf("fork at right: yes\n");
-	else
-		printf("fork at right: no\n");
-	if (philosopher->left_hand)
-		printf("fork in left hand: yes\n");
-	else
-		printf("fork in left hand: no\n");
-	if (philosopher->right_hand)
-		printf("fork in right hand: yes\n");
-	else
-		printf("fork in right hand: no\n");
-	printf("~~~\n");
+	t_philosopher	*specific_philosopher;
+	int				backward;
+
+	backward = 0;
+	specific_philosopher = data->philosopher;
+	while (specific_philosopher->number != number)
+	{
+		if (!specific_philosopher->next)
+			backward = 1;
+		if (backward)
+			specific_philosopher = specific_philosopher->prev;
+		else
+			specific_philosopher = specific_philosopher->next;
+	}
+	return (specific_philosopher);
 }
 
-static t_philosopher	*new_philosopher()
+static t_philosopher	*new_philosopher(void)
 {
 	t_philosopher	*philosopher;
+	pthread_mutex_t	right_fork;
+	pthread_t		thread;
 
 	philosopher = malloc(sizeof(t_philosopher));
 	if (!philosopher)
 		return (NULL);
-	philosopher->state = 1;
-	philosopher->fork_at_right = 1;
-	philosopher->left_hand = 0;
-	philosopher->right_hand = 0;
+	thread = 0;
+	philosopher->thread = thread;
+	philosopher->state = 0;
+	pthread_mutex_init(&right_fork, NULL);
+	philosopher->fork_at_right = right_fork;
+	philosopher->hold_left_hand = 0;
+	philosopher->hold_right_hand = 0;
 	philosopher->next = NULL;
 	philosopher->prev = NULL;
 	return (philosopher);
@@ -65,19 +60,19 @@ void	create_philosopers(t_data *data, int number_of_philosophers)
 	i = 0;
 	while (i < number_of_philosophers)
 	{
-		// create his fork (right)
 		data->philosopher = new_philosopher();
 		if (i != 0)
 		{
 			data->philosopher->prev = prev_philosopher;
 			data->philosopher->prev->next = data->philosopher;
-			// his left fork is his left neighbor's one
+			data->philosopher->fork_at_left = data->philosopher->prev->fork_at_right;
 		}
 		data->philosopher->number = i + 1;
 		prev_philosopher = data->philosopher;
 		i++;
 	}
-	while (data->philosopher->prev)
-		data->philosopher = data->philosopher->prev;
-	// left fork = last one
+	data->philosopher->next = get_philosopher(data, 1);
+	data->philosopher = get_philosopher(data, 1);
+	data->philosopher->prev = get_philosopher(data, number_of_philosophers);
+	data->philosopher->fork_at_left = data->philosopher->prev->fork_at_right;
 }

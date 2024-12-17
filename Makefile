@@ -2,7 +2,8 @@ NAME 	= philosopher
 CC		= cc
 CFLAGS	= -Wall -Werror -Wextra -g3
 
-SRC =	main.c	\
+SRC =	debug.c	\
+		main.c	\
 		philosophers_utils.c
 
 OBJ = $(SRC:.c=.o)
