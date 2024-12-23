@@ -6,68 +6,71 @@
 /*   By: nsauret <nsauret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 15:55:52 by nsauret           #+#    #+#             */
-/*   Updated: 2024/12/19 15:28:36 by nsauret          ###   ########.fr       */
+/*   Updated: 2024/12/23 17:58:52 by nsauret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philosopher.h"
+#include "philosophers.h"
 
 t_philosopher	*get_philosopher(t_data *data, int number)
 {
-	t_philosopher	*specific_philosopher;
+	t_philosopher	*specific_philo;
 
-	specific_philosopher = data->philosopher;
-	while (specific_philosopher->number != number)
+	specific_philo = data->philo;
+	while (specific_philo->number != number)
 	{
-		if (!specific_philosopher)
+		if (!specific_philo)
 			return (NULL);
-		if (number < specific_philosopher->number)
-			specific_philosopher = specific_philosopher->prev;
+		if (number < specific_philo->number)
+			specific_philo = specific_philo->prev;
 		else
-			specific_philosopher = specific_philosopher->next;
+			specific_philo = specific_philo->next;
 	}
-	return (specific_philosopher);
+	return (specific_philo);
 }
 
-static t_philosopher	*new_philosopher(t_data *data)
+static t_philosopher	*new_philosopher(t_infos *infos)
 {
-	t_philosopher	*philosopher;
+	t_philosopher		*philo;
 
-	philosopher = malloc(sizeof(t_philosopher));
-	if (!philosopher)
+	philo = malloc(sizeof(t_philosopher));
+	if (!philo)
 		return (NULL);
-	philosopher->time_start = data->time_start;
-	philosopher->last_eat_time = 0;
-	pthread_mutex_init(&philosopher->fork_at_right, NULL);
-	philosopher->hold_left_hand = 0;
-	philosopher->hold_right_hand = 0;
-	philosopher->next = NULL;
-	philosopher->prev = NULL;
-	return (philosopher);
+	philo->infos = *infos;
+	philo->last_eat_time = 0;
+	pthread_mutex_init(&philo->fork_at_right, NULL);
+	philo->hold_left_hand = 0;
+	philo->hold_right_hand = 0;
+	philo->next = NULL;
+	philo->prev = NULL;
+	return (philo);
 }
 
-void	create_philosopers(t_data *data, int number_of_philosophers)
+int	create_philosopers(t_data *data, t_infos *infos)
 {
 	int				i;
-	t_philosopher	*prev_philosopher;
+	t_philosopher	*prev_philo;
 
-	data->time_start = get_time();
+	infos->time_start = get_time();
 	i = 0;
-	while (i < number_of_philosophers)
+	while (i < infos->number_of_philosophers)
 	{
-		data->philosopher = new_philosopher(data);
+		data->philo = new_philosopher(infos);
+		if (!data->philo)
+			return (data->philo = get_philosopher(data, 1), 0);
 		if (i != 0)
 		{
-			data->philosopher->prev = prev_philosopher;
-			data->philosopher->prev->next = data->philosopher;
-			data->philosopher->fork_at_left = &data->philosopher->prev->fork_at_right;
+			data->philo->prev = prev_philo;
+			data->philo->prev->next = data->philo;
+			data->philo->fork_at_left = &data->philo->prev->fork_at_right;
 		}
-		data->philosopher->number = i + 1;
-		prev_philosopher = data->philosopher;
-		i++;
+		data->philo->number = ++i;
+		data->last_philo_number = data->philo->number;
+		prev_philo = data->philo;
 	}
-	data->philosopher->next = get_philosopher(data, 1);
-	data->philosopher = data->philosopher->next;
-	data->philosopher->prev = get_philosopher(data, number_of_philosophers);
-	data->philosopher->fork_at_left = &data->philosopher->prev->fork_at_right;
+	data->philo->next = get_philosopher(data, 1);
+	data->philo = data->philo->next;
+	data->philo->prev = get_philosopher(data, infos->number_of_philosophers);
+	data->philo->fork_at_left = &data->philo->prev->fork_at_right;
+	return (1);
 }

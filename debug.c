@@ -6,21 +6,21 @@
 /*   By: nsauret <nsauret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 13:34:24 by nsauret           #+#    #+#             */
-/*   Updated: 2024/12/19 15:25:35 by nsauret          ###   ########.fr       */
+/*   Updated: 2024/12/23 17:17:02 by nsauret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philosopher.h"
+#include "philosophers.h"
 
-void	display_philosopher(t_philosopher *philosopher)
+void	display_philosopher(t_philosopher *philo)
 {
 	printf("~~~\n");
-	printf("number: %d\n", philosopher->number);
-	if (philosopher->hold_left_hand)
+	printf("number: %d\n", philo->number);
+	if (philo->hold_left_hand)
 		printf("fork in left hand: yes\n");
 	else
 		printf("fork in left hand: no\n");
-	if (philosopher->hold_right_hand)
+	if (philo->hold_right_hand)
 		printf("fork in right hand: yes\n");
 	else
 		printf("fork in right hand: no\n");
@@ -29,32 +29,32 @@ void	display_philosopher(t_philosopher *philosopher)
 
 void	display_table(t_philosopher *philo_input)
 {
-	t_philosopher	*philosopher;
-	int				number_of_philosopher;
+	t_philosopher	*philo;
+	int				number_of_philosophers;
 	int				i;
 
-	philosopher = philo_input;
-	while (philosopher->number != 1)
+	philo = philo_input;
+	while (philo->number != 1)
 	{
-		if (philosopher < 0)
-			philosopher = philosopher->next;
+		if (philo < 0)
+			philo = philo->next;
 		else
-			philosopher = philosopher->prev;
+			philo = philo->prev;
 	}
-	number_of_philosopher = 2;
+	number_of_philosophers = 2;
 
 	i = 0;
-	while (i < number_of_philosopher)
+	while (i < number_of_philosophers)
 	{
-		if (!philosopher->hold_left_hand && !philosopher->prev->hold_right_hand)
+		if (!philo->hold_left_hand && !philo->prev->hold_right_hand)
 			printf(" 🍴 ");
 		else
 			printf("    ");
 		printf("   ");
-		philosopher = philosopher->next;
+		philo = philo->next;
 		i++;
 	}
-	if (!philosopher->prev->hold_right_hand && !philosopher->hold_left_hand)
+	if (!philo->prev->hold_right_hand && !philo->hold_left_hand)
 		printf(" 🍴 ");
 	else
 		printf("    ");
@@ -62,16 +62,16 @@ void	display_table(t_philosopher *philo_input)
 	printf("\n");
 
 	i = 0;
-	while (i < number_of_philosopher)
+	while (i < number_of_philosophers)
 	{
-		if (philosopher->hold_left_hand)
+		if (philo->hold_left_hand)
 			printf("  🍴");
 		else
 			printf("    ");
-		printf("-%d-", philosopher->number);
-		if (philosopher->hold_right_hand)
+		printf("-%d-", philo->number);
+		if (philo->hold_right_hand)
 			printf("🍴  ");
-		philosopher = philosopher->next;
+		philo = philo->next;
 		i++;
 	}
 	printf("\n");

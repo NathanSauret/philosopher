@@ -6,11 +6,11 @@
 /*   By: nsauret <nsauret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 15:17:26 by nsauret           #+#    #+#             */
-/*   Updated: 2024/12/19 15:37:43 by nsauret          ###   ########.fr       */
+/*   Updated: 2024/12/23 17:21:35 by nsauret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philosopher.h"
+#include "philosophers.h"
 
 long	get_time(void)
 {
@@ -26,7 +26,7 @@ void	display_message(t_philosopher *philo, int status)
 {
 	long	time;
 
-	time = get_time() - philo->time_start;
+	time = get_time() - philo->infos.time_start;
 	if (status == 0)
 		printf("%ld %d has taken a fork\n", time, philo->number);
 	else if (status == 1)

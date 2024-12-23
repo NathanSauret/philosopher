@@ -3,7 +3,9 @@ CC		= cc
 CFLAGS	= -Wall -Werror -Wextra -g3
 
 SRC =	debug.c	\
+		free.c	\
 		main.c	\
+		parsing.c	\
 		philosophers_utils.c	\
 		utils.c	\
 
@@ -32,7 +34,7 @@ re: fclean all
 	@clear
 	@echo "Re:Zero - Re:Clean and compile again."
 
-fsanitize:
+fsanitize: all
 	@$(CC) -o $(NAME) $(CFLAGS) -fsanitize=thread $(OBJ)
 	@clear
 	@echo "Compilation done!"
