@@ -6,7 +6,7 @@
 /*   By: nsauret <nsauret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 15:55:52 by nsauret           #+#    #+#             */
-/*   Updated: 2024/12/23 17:58:52 by nsauret          ###   ########.fr       */
+/*   Updated: 2024/12/25 17:37:02 by nsauret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,11 +36,12 @@ static t_philosopher	*new_philosopher(t_infos *infos)
 	philo = malloc(sizeof(t_philosopher));
 	if (!philo)
 		return (NULL);
-	philo->infos = *infos;
-	philo->last_eat_time = 0;
+	philo->infos = infos;
+	philo->last_eat_time = infos->time_start;
 	pthread_mutex_init(&philo->fork_at_right, NULL);
 	philo->hold_left_hand = 0;
 	philo->hold_right_hand = 0;
+	philo->finished = 0;
 	philo->next = NULL;
 	philo->prev = NULL;
 	return (philo);

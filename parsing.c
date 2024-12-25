@@ -6,7 +6,7 @@
 /*   By: nsauret <nsauret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 16:27:33 by nsauret           #+#    #+#             */
-/*   Updated: 2024/12/23 17:19:05 by nsauret          ###   ########.fr       */
+/*   Updated: 2024/12/25 17:35:45 by nsauret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,30 +33,9 @@ static long	ft_atoi(const char *nptr)
 	return (res);
 }
 
-// static long	ft_long_atoi(const char *nptr)
-// {
-// 	long long		res;
-
-// 	res = 0;
-// 	while ((*nptr >= 9 && *nptr <= 13) || *nptr == ' ')
-// 		nptr++;
-// 	if (*nptr == '-')
-// 		return (-1);
-// 	if (*nptr == '+' || *nptr == '-')
-// 		nptr++;
-// 	res = 0;
-// 	while (*nptr >= '0' && *nptr <= '9')
-// 	{
-// 		res = 10 * res + (*nptr++ - '0');
-// 		if (res > 2147483647)
-// 			return (-1);
-// 	}
-// 	return (res);
-// }
-
 int	parsing(t_data *data, t_infos *infos, int argc, char **argv)
 {
-	data->infos = *infos;
+	data->infos = infos;
 	if (argc != 5 && argc != 6)
 		return (0);
 	infos->number_of_philosophers = ft_atoi(argv[1]);
@@ -79,5 +58,6 @@ int	parsing(t_data *data, t_infos *infos, int argc, char **argv)
 	}
 	else
 		infos->nbr_must_eat = -1;
-	return (1);
+
+	return (pthread_mutex_init(&infos->write_mutex, NULL), 1);
 }

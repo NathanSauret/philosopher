@@ -6,26 +6,11 @@
 /*   By: nsauret <nsauret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 13:34:24 by nsauret           #+#    #+#             */
-/*   Updated: 2024/12/23 17:17:02 by nsauret          ###   ########.fr       */
+/*   Updated: 2024/12/25 16:44:56 by nsauret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
-
-void	display_philosopher(t_philosopher *philo)
-{
-	printf("~~~\n");
-	printf("number: %d\n", philo->number);
-	if (philo->hold_left_hand)
-		printf("fork in left hand: yes\n");
-	else
-		printf("fork in left hand: no\n");
-	if (philo->hold_right_hand)
-		printf("fork in right hand: yes\n");
-	else
-		printf("fork in right hand: no\n");
-	printf("~~~\n");
-}
 
 void	display_table(t_philosopher *philo_input)
 {
