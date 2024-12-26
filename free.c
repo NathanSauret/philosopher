@@ -6,11 +6,11 @@
 /*   By: nsauret <nsauret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 16:32:15 by nsauret           #+#    #+#             */
-/*   Updated: 2024/12/25 17:16:18 by nsauret          ###   ########.fr       */
+/*   Updated: 2024/12/26 15:29:08 by nsauret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philosophers.h"
+#include "philo.h"
 
 void	free_everything(t_data *data)
 {

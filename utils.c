@@ -6,11 +6,35 @@
 /*   By: nsauret <nsauret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 15:17:26 by nsauret           #+#    #+#             */
-/*   Updated: 2024/12/25 17:10:56 by nsauret          ###   ########.fr       */
+/*   Updated: 2024/12/26 15:57:25 by nsauret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philosophers.h"
+#include "philo.h"
+
+void	ft_usleep(long milliseconds, t_infos *infos)
+{
+	long	start;
+
+	start = get_time();
+	while ((get_time() - start) < milliseconds && !infos->someone_died)
+		usleep(500);
+}
+
+int	everyone_finished(t_philosopher *philo)
+{
+	int	i;
+
+	i = 0;
+	while (i < philo->infos->number_of_philosophers)
+	{
+		if (!philo->finished)
+			return (0);
+		i++;
+		philo = philo->next;
+	}
+	return (1);
+}
 
 long	get_time(void)
 {
@@ -36,7 +60,7 @@ void	display_message(t_philosopher *philo, int status)
 		printf("%ld %d is sleeping\n", time, philo->number);
 	else if (status == 3)
 		printf("%ld %d is thinking\n", time, philo->number);
-	else
+	else if (status == 4)
 		printf("%ld %d died\n", time, philo->number);
 	pthread_mutex_unlock(&philo->infos->write_mutex);
 }

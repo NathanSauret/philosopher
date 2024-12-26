@@ -2,5 +2,6 @@
 [X] - Add struct in commun to all philosophers.
 [X] - Mutex for writing.
 [X] - Thread for observing all the philosophers.
-[ ] - Find a way to exit in a clean way without exit();
-[ ] - Fix philosophers dying in middle of nowhere.
+[X] - Find a way to exit in a clean way without exit();
+[X] - ft_usleep stop if someone dies.
+[?] - Fix philosophers dying in middle of nowhere.

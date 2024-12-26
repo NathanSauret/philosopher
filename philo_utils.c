@@ -1,16 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philosophers_utils.c                               :+:      :+:    :+:   */
+/*   philo_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nsauret <nsauret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 15:55:52 by nsauret           #+#    #+#             */
-/*   Updated: 2024/12/25 17:37:02 by nsauret          ###   ########.fr       */
+/*   Updated: 2024/12/26 15:28:43 by nsauret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philosophers.h"
+#include "philo.h"
+
+void	exit_table(t_philosopher *philo)
+{
+	if (philo->hold_right_hand)
+		pthread_mutex_unlock(&philo->fork_at_right);
+	if (philo->hold_left_hand)
+		pthread_mutex_unlock(philo->fork_at_left);
+}
 
 t_philosopher	*get_philosopher(t_data *data, int number)
 {
@@ -37,7 +45,7 @@ static t_philosopher	*new_philosopher(t_infos *infos)
 	if (!philo)
 		return (NULL);
 	philo->infos = infos;
-	philo->last_eat_time = infos->time_start;
+	philo->last_eat_time = get_time();
 	pthread_mutex_init(&philo->fork_at_right, NULL);
 	philo->hold_left_hand = 0;
 	philo->hold_right_hand = 0;
@@ -45,6 +53,17 @@ static t_philosopher	*new_philosopher(t_infos *infos)
 	philo->next = NULL;
 	philo->prev = NULL;
 	return (philo);
+}
+
+static void	last_actions(t_data *data, t_infos *infos)
+{
+	data->philo->next = get_philosopher(data, 1);
+	data->philo = data->philo->next;
+	data->philo->prev = get_philosopher(data, infos->number_of_philosophers);
+	if (data->infos->number_of_philosophers > 1)
+		data->philo->fork_at_left = &data->philo->prev->fork_at_right;
+	else
+		data->philo->fork_at_left = NULL;
 }
 
 int	create_philosopers(t_data *data, t_infos *infos)
@@ -69,9 +88,6 @@ int	create_philosopers(t_data *data, t_infos *infos)
 		data->last_philo_number = data->philo->number;
 		prev_philo = data->philo;
 	}
-	data->philo->next = get_philosopher(data, 1);
-	data->philo = data->philo->next;
-	data->philo->prev = get_philosopher(data, infos->number_of_philosophers);
-	data->philo->fork_at_left = &data->philo->prev->fork_at_right;
+	last_actions(data, infos);
 	return (1);
 }

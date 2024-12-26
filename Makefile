@@ -1,12 +1,14 @@
-NAME 	= philosopher
+NAME 	= philo
 CC		= cc
 CFLAGS	= -Wall -Werror -Wextra -g3
 
-SRC =	debug.c	\
+SRC =	abyss_watcher.c	\
 		free.c	\
+		loop.c	\
 		main.c	\
 		parsing.c	\
-		philosophers_utils.c	\
+		philo_utils.c	\
+		safe_actions.c	\
 		utils.c	\
 
 OBJ = $(SRC:.c=.o)

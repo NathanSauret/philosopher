@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philosophers.h                                     :+:      :+:    :+:   */
+/*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nsauret <nsauret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 15:43:03 by nsauret           #+#    #+#             */
-/*   Updated: 2024/12/25 17:35:49 by nsauret          ###   ########.fr       */
+/*   Updated: 2024/12/26 15:21:39 by nsauret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PHILOSOPHERS_H
-# define PHILOSOPHERS_H
+#ifndef PHILO_H
+# define PHILO_H
 
 # include <unistd.h>
 # include <stdio.h>
@@ -28,12 +28,14 @@
 typedef struct s_infos
 {
 	pthread_mutex_t	write_mutex;
+	int				start_signal;
 	long			time_start;
 	int				number_of_philosophers;
 	long			time_to_die;
 	long			time_to_eat;
 	long			time_to_sleep;
 	int				nbr_must_eat;
+	int				someone_died;
 }	t_infos;
 
 //state: 0=waiting_to_eat; 1=eating; 2=sleeping; 3=thinking
@@ -60,21 +62,36 @@ typedef struct s_data
 	int					last_philo_number;
 }	t_data;
 
+// abyss_watcher.c
+void			*abyss_watcher_loop(void *void_philo);
+
 // debug.c
-void			display_philosopher(t_philosopher *philosopher);
 void			display_table(t_philosopher *philo_input);
 
 // free
 void			free_everything(t_data *data);
 
-// parsing.c
-int				parsing(t_data *data, t_infos *infos, int argc, char **argv);
+// loop.c
+void			loop(t_data	*data);
 
-// philosopher_utils.c
+// parsing.c
+int				parsing(t_infos *infos, int argc, char **argv);
+
+// philo_utils.c
+void			exit_table(t_philosopher *philo);
 t_philosopher	*get_philosopher(t_data *data, int number);
 int				create_philosopers(t_data *data, t_infos *infos);
 
+// safe_actions.c
+int				safe_take_fork(t_philosopher *philo, pthread_mutex_t *fork);
+int				safe_put_down_fork(t_philosopher *philo, pthread_mutex_t *fork);
+int				safe_eating(t_philosopher *philo);
+int				safe_sleeping(t_philosopher *philo);
+int				safe_thinking(t_philosopher *philo);
+
 // utils.c
+void			ft_usleep(long milliseconds, t_infos *infos);
+int				everyone_finished(t_philosopher *philo);
 long			get_time(void);
 void			display_message(t_philosopher *philo, int status);
 
