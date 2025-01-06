@@ -6,7 +6,7 @@
 /*   By: nsauret <nsauret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/26 11:58:19 by nsauret           #+#    #+#             */
-/*   Updated: 2024/12/26 15:21:52 by nsauret          ###   ########.fr       */
+/*   Updated: 2025/01/06 18:31:46 by nsauret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ static void	*philosopher_loop(void *void_philo)
 	while (!philo->infos->start_signal)
 		continue ;
 	if (philo->number % 2 == 0)
-		ft_usleep(1, philo->infos);
+		ft_usleep(2, philo->infos);
 	if (!routine(philo))
 		return (NULL);
 	return (philo->finished = 1, NULL);

@@ -6,7 +6,7 @@
 /*   By: nsauret <nsauret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 15:17:26 by nsauret           #+#    #+#             */
-/*   Updated: 2024/12/26 15:57:25 by nsauret          ###   ########.fr       */
+/*   Updated: 2025/01/06 18:26:32 by nsauret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,14 @@ void	ft_usleep(long milliseconds, t_infos *infos)
 	long	start;
 
 	start = get_time();
+	pthread_mutex_lock(&infos->mutex_someone_died);
 	while ((get_time() - start) < milliseconds && !infos->someone_died)
+	{
+		pthread_mutex_unlock(&infos->mutex_someone_died);
 		usleep(500);
+		pthread_mutex_lock(&infos->mutex_someone_died);
+	}
+	pthread_mutex_unlock(&infos->mutex_someone_died);
 }
 
 int	everyone_finished(t_philosopher *philo)
@@ -52,15 +58,23 @@ void	display_message(t_philosopher *philo, int status)
 
 	pthread_mutex_lock(&philo->infos->write_mutex);
 	time = get_time() - philo->infos->time_start;
+	if (status == 4)
+		printf(BOLD_RED"%ld %d died\n"RESET, time, philo->number);
+	pthread_mutex_lock(&philo->infos->mutex_someone_died);
+	if (philo->infos->someone_died)
+	{
+		pthread_mutex_unlock(&philo->infos->mutex_someone_died);
+		pthread_mutex_unlock(&philo->infos->write_mutex);
+		return ;
+	}
+	pthread_mutex_unlock(&philo->infos->mutex_someone_died);
 	if (status == 0)
-		printf("%ld %d has taken a fork\n", time, philo->number);
+		printf("%ld %d has taken a fork\n"RESET, time, philo->number);
 	else if (status == 1)
-		printf("%ld %d is eating\n", time, philo->number);
+		printf(PURPLE"%ld %d is eating\n"RESET, time, philo->number);
 	else if (status == 2)
-		printf("%ld %d is sleeping\n", time, philo->number);
+		printf(BLUE"%ld %d is sleeping\n"RESET, time, philo->number);
 	else if (status == 3)
-		printf("%ld %d is thinking\n", time, philo->number);
-	else if (status == 4)
-		printf("%ld %d died\n", time, philo->number);
+		printf(GREEN"%ld %d is thinking\n"RESET, time, philo->number);
 	pthread_mutex_unlock(&philo->infos->write_mutex);
 }

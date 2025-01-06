@@ -6,7 +6,7 @@
 /*   By: nsauret <nsauret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 16:27:33 by nsauret           #+#    #+#             */
-/*   Updated: 2024/12/26 15:53:57 by nsauret          ###   ########.fr       */
+/*   Updated: 2025/01/06 17:58:22 by nsauret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,10 @@ int	parsing(t_infos *infos, int argc, char **argv)
 	}
 	else
 		infos->nbr_must_eat = -1;
+	pthread_mutex_init(&infos->mutex_someone_died, NULL);
+	pthread_mutex_lock(&infos->mutex_someone_died);
 	infos->someone_died = 0;
+	pthread_mutex_unlock(&infos->mutex_someone_died);
 	infos->start_signal = 0;
 	return (pthread_mutex_init(&infos->write_mutex, NULL), 1);
 }
