@@ -5,4 +5,5 @@
 [X] - Find a way to exit in a clean way without exit();
 [X] - ft_usleep stop if someone dies.
 [X] - Condition to write at the end (death).
-[?] - Fix philosophers dying in middle of nowhere.
+[X] - Fix philosophers dying in middle of nowhere.
+[ ] - Secure all threads allocations.

@@ -6,7 +6,7 @@
 /*   By: nsauret <nsauret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 16:27:33 by nsauret           #+#    #+#             */
-/*   Updated: 2025/01/06 17:58:22 by nsauret          ###   ########.fr       */
+/*   Updated: 2025/01/07 16:08:45 by nsauret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static long	ft_atoi(const char *nptr)
 	return (res);
 }
 
-int	parsing(t_infos *infos, int argc, char **argv)
+static int	error_handler(t_infos *infos, int argc, char **argv)
 {
 	if (argc != 5 && argc != 6)
 		return (printf("Error: Wrong number of arguments\n"), 0);
@@ -59,10 +59,22 @@ int	parsing(t_infos *infos, int argc, char **argv)
 	}
 	else
 		infos->nbr_must_eat = -1;
-	pthread_mutex_init(&infos->mutex_someone_died, NULL);
+	return (1);
+}
+
+int	parsing(t_infos *infos, int argc, char **argv)
+{
+	if (!error_handler(infos, argc, argv))
+		return (0);
+	if (pthread_mutex_init(&infos->mutex_someone_died, NULL) != 0)
+		return (0);
+	if (pthread_mutex_init(&infos->mutex_start_signal, NULL) != 0)
+		return (0);
 	pthread_mutex_lock(&infos->mutex_someone_died);
 	infos->someone_died = 0;
 	pthread_mutex_unlock(&infos->mutex_someone_died);
 	infos->start_signal = 0;
-	return (pthread_mutex_init(&infos->write_mutex, NULL), 1);
+	if (pthread_mutex_init(&infos->write_mutex, NULL) != 0)
+		return (0);
+	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: nsauret <nsauret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 15:17:26 by nsauret           #+#    #+#             */
-/*   Updated: 2025/01/06 18:26:32 by nsauret          ###   ########.fr       */
+/*   Updated: 2025/01/07 16:37:02 by nsauret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,5 +76,7 @@ void	display_message(t_philosopher *philo, int status)
 		printf(BLUE"%ld %d is sleeping\n"RESET, time, philo->number);
 	else if (status == 3)
 		printf(GREEN"%ld %d is thinking\n"RESET, time, philo->number);
+	else if (status == 5)
+		printf(BOLD_CYAN"%ld %d FINISHED!\n"RESET, time, philo->number);
 	pthread_mutex_unlock(&philo->infos->write_mutex);
 }

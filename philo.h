@@ -6,7 +6,7 @@
 /*   By: nsauret <nsauret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 15:43:03 by nsauret           #+#    #+#             */
-/*   Updated: 2025/01/06 18:29:56 by nsauret          ###   ########.fr       */
+/*   Updated: 2025/01/07 16:36:50 by nsauret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,13 @@
 # define SLEEPING_MSG	2
 # define THINKING_MSG	3
 # define DEAD_MSG		4
+# define FINISHED_MSG	5
 # define RESET			"\033[0m"
 # define BOLD_RED		"\033[1;31m"
 # define BLUE			"\033[34m"
 # define GREEN			"\033[0;32m"
 # define PURPLE			"\033[0;35m"
+# define BOLD_CYAN		"\033[0;36m\e[1m"
 
 typedef struct s_infos
 {
@@ -41,6 +43,7 @@ typedef struct s_infos
 	long			time_to_sleep;
 	int				nbr_must_eat;
 	pthread_mutex_t	mutex_someone_died;
+	pthread_mutex_t	mutex_start_signal;
 	int				someone_died;
 }	t_infos;
 

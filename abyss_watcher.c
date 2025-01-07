@@ -6,7 +6,7 @@
 /*   By: nsauret <nsauret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/26 11:58:39 by nsauret           #+#    #+#             */
-/*   Updated: 2025/01/06 18:19:40 by nsauret          ###   ########.fr       */
+/*   Updated: 2025/01/07 16:40:14 by nsauret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,16 +26,16 @@ void	*abyss_watcher_loop(void *void_philo)
 			philo->infos->someone_died = 1;
 			pthread_mutex_unlock(&philo->infos->mutex_someone_died);
 			display_message(philo, DEAD_MSG);
-			if (philo->hold_left_hand)
-			{
-				pthread_mutex_unlock(philo->fork_at_left);
-				philo->hold_left_hand = 0;
-			}
-			if (philo->hold_right_hand)
-			{
-				pthread_mutex_unlock(&philo->fork_at_right);
-				philo->hold_right_hand = 0;
-			}
+			// if (philo->hold_left_hand)
+			// {
+			// 	pthread_mutex_unlock(philo->fork_at_left);
+			// 	philo->hold_left_hand = 0;
+			// }
+			// if (philo->hold_right_hand)
+			// {
+			// 	pthread_mutex_unlock(&philo->fork_at_right);
+			// 	philo->hold_right_hand = 0;
+			// }
 			return (NULL);
 		}
 		philo = philo->next;
