@@ -6,7 +6,7 @@
 /*   By: nsauret <nsauret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/26 11:58:39 by nsauret           #+#    #+#             */
-/*   Updated: 2025/01/07 16:40:14 by nsauret          ###   ########.fr       */
+/*   Updated: 2025/01/14 15:24:47 by nsauret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,25 +19,18 @@ void	*abyss_watcher_loop(void *void_philo)
 	philo = (t_philosopher *) void_philo;
 	while (!everyone_finished(philo))
 	{
+		pthread_mutex_lock(&philo->mutex_last_eat_time);
 		if (!philo->finished
 			&& get_time() - philo->last_eat_time > philo->infos->time_to_die)
 		{
+			pthread_mutex_unlock(&philo->mutex_last_eat_time);
 			pthread_mutex_lock(&philo->infos->mutex_someone_died);
 			philo->infos->someone_died = 1;
 			pthread_mutex_unlock(&philo->infos->mutex_someone_died);
 			display_message(philo, DEAD_MSG);
-			// if (philo->hold_left_hand)
-			// {
-			// 	pthread_mutex_unlock(philo->fork_at_left);
-			// 	philo->hold_left_hand = 0;
-			// }
-			// if (philo->hold_right_hand)
-			// {
-			// 	pthread_mutex_unlock(&philo->fork_at_right);
-			// 	philo->hold_right_hand = 0;
-			// }
 			return (NULL);
 		}
+		pthread_mutex_unlock(&philo->mutex_last_eat_time);
 		philo = philo->next;
 	}
 	return (NULL);

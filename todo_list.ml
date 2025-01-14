@@ -6,4 +6,8 @@
 [X] - ft_usleep stop if someone dies.
 [X] - Condition to write at the end (death).
 [X] - Fix philosophers dying in middle of nowhere.
-[ ] - Secure all threads allocations.
+[X] - Secure all threads allocations.
+[X] - Free other mutex in parsing when it break somewhere.
+[X] - Free everything at the end (add mutex).
+[X] - Fix segfault in get_philosopher().
+[ ] - Fix dada race in abyss watcher.

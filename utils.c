@@ -6,7 +6,7 @@
 /*   By: nsauret <nsauret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 15:17:26 by nsauret           #+#    #+#             */
-/*   Updated: 2025/01/07 16:37:02 by nsauret          ###   ########.fr       */
+/*   Updated: 2025/01/14 15:07:45 by nsauret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,14 @@ long	get_time(void)
 	gettimeofday(&tv, NULL);
 	time = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
 	return (time);
+}
+
+void	print_error(int err_int)
+{
+	if (err_int == MUTEX_ERROR)
+		printf(BOLD_RED"Error: Mutex initialization failed\n"RESET);
+	if (err_int == MALLOC_ERROR)
+		printf(BOLD_RED"Error: Malloc initialization failed\n"RESET);
 }
 
 void	display_message(t_philosopher *philo, int status)

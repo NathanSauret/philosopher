@@ -6,7 +6,7 @@
 /*   By: nsauret <nsauret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/26 12:11:04 by nsauret           #+#    #+#             */
-/*   Updated: 2025/01/07 16:39:24 by nsauret          ###   ########.fr       */
+/*   Updated: 2025/01/14 15:27:11 by nsauret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,8 @@ int	safe_put_down_fork(t_philosopher *philo, pthread_mutex_t *fork)
 	if (philo->infos->someone_died)
 	{
 		exit_table(philo);
-		return (pthread_mutex_unlock(&philo->infos->mutex_someone_died), 0);
+		pthread_mutex_unlock(&philo->infos->mutex_someone_died);
+		return (0);
 	}
 	pthread_mutex_unlock(&philo->infos->mutex_someone_died);
 	pthread_mutex_unlock(fork);
@@ -53,10 +54,13 @@ int	safe_eating(t_philosopher *philo)
 	if (philo->infos->someone_died)
 	{
 		exit_table(philo);
-		return (pthread_mutex_unlock(&philo->infos->mutex_someone_died), 0);
+		pthread_mutex_unlock(&philo->infos->mutex_someone_died);
+		return (0);
 	}
 	pthread_mutex_unlock(&philo->infos->mutex_someone_died);
+	pthread_mutex_lock(&philo->mutex_last_eat_time);
 	philo->last_eat_time = get_time();
+	pthread_mutex_unlock(&philo->mutex_last_eat_time);
 	display_message(philo, EATING_MSG);
 	ft_usleep(philo->infos->time_to_eat, philo->infos);
 	return (1);
@@ -68,7 +72,8 @@ int	safe_sleeping(t_philosopher *philo)
 	if (philo->infos->someone_died)
 	{
 		exit_table(philo);
-		return (pthread_mutex_unlock(&philo->infos->mutex_someone_died), 0);
+		pthread_mutex_unlock(&philo->infos->mutex_someone_died);
+		return (0);
 	}
 	pthread_mutex_unlock(&philo->infos->mutex_someone_died);
 	display_message(philo, SLEEPING_MSG);
@@ -82,7 +87,8 @@ int	safe_thinking(t_philosopher *philo)
 	if (philo->infos->someone_died)
 	{
 		exit_table(philo);
-		return (pthread_mutex_unlock(&philo->infos->mutex_someone_died), 0);
+		pthread_mutex_unlock(&philo->infos->mutex_someone_died);
+		return (0);
 	}
 	pthread_mutex_unlock(&philo->infos->mutex_someone_died);
 	display_message(philo, THINKING_MSG);

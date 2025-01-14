@@ -6,7 +6,7 @@
 /*   By: nsauret <nsauret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 15:43:03 by nsauret           #+#    #+#             */
-/*   Updated: 2025/01/07 16:36:50 by nsauret          ###   ########.fr       */
+/*   Updated: 2025/01/14 15:23:58 by nsauret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@
 # define THINKING_MSG	3
 # define DEAD_MSG		4
 # define FINISHED_MSG	5
+# define MUTEX_ERROR	0
+# define MALLOC_ERROR	1
 # define RESET			"\033[0m"
 # define BOLD_RED		"\033[1;31m"
 # define BLUE			"\033[34m"
@@ -54,6 +56,7 @@ typedef struct s_philosopher
 	pthread_t				thread;
 	int						number;
 	long					last_eat_time;
+	pthread_mutex_t			mutex_last_eat_time;
 	pthread_mutex_t			fork_at_right;
 	pthread_mutex_t			*fork_at_left;
 	int						hold_left_hand;
@@ -102,6 +105,7 @@ int				safe_thinking(t_philosopher *philo);
 void			ft_usleep(long milliseconds, t_infos *infos);
 int				everyone_finished(t_philosopher *philo);
 long			get_time(void);
+void			print_error(int err_int);
 void			display_message(t_philosopher *philo, int status);
 
 #endif

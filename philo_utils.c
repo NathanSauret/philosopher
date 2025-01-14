@@ -6,7 +6,7 @@
 /*   By: nsauret <nsauret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 15:55:52 by nsauret           #+#    #+#             */
-/*   Updated: 2025/01/07 15:49:24 by nsauret          ###   ########.fr       */
+/*   Updated: 2025/01/14 15:33:00 by nsauret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ t_philosopher	*get_philosopher(t_data *data, int number)
 	t_philosopher	*specific_philo;
 
 	specific_philo = data->philo;
+	if (!specific_philo)
+		return (NULL);
 	while (specific_philo->number != number)
 	{
 		if (!specific_philo)
@@ -43,11 +45,20 @@ static t_philosopher	*new_philosopher(t_infos *infos)
 
 	philo = malloc(sizeof(t_philosopher));
 	if (!philo)
-		return (NULL);
+		return (print_error(MALLOC_ERROR), NULL);
 	philo->infos = infos;
+	if (pthread_mutex_init(&philo->mutex_last_eat_time, NULL))
+	{
+		free(philo);
+		return (print_error(MUTEX_ERROR), NULL);
+	}
 	philo->last_eat_time = get_time();
 	if (pthread_mutex_init(&philo->fork_at_right, NULL))
-		return (NULL);
+	{
+		pthread_mutex_destroy(&philo->mutex_last_eat_time);
+		free(philo);
+		return (print_error(MUTEX_ERROR), NULL);
+	}
 	philo->hold_left_hand = 0;
 	philo->hold_right_hand = 0;
 	philo->finished = 0;
@@ -73,6 +84,7 @@ int	create_philosopers(t_data *data, t_infos *infos)
 	t_philosopher	*prev_philo;
 
 	infos->time_start = get_time();
+	data->last_philo_number = 0;
 	i = 0;
 	while (i < infos->number_of_philosophers)
 	{
